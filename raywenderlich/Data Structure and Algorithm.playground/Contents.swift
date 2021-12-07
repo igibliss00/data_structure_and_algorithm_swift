@@ -2,28 +2,42 @@ import Foundation
 import PlaygroundSupport
 import XCTest
 
-class StackTests: XCTestCase {
-    override class func setUp() {
-        
+final class StackTests: XCTestCase {
+    var stack = Stack<Int>()
+    
+    override func setUp() {
+        stack.push(1)
+        stack.push(2)
+        stack.push(3)
+        stack.push(4)
     }
     
-    override class func tearDown() {
-        
+    func test_push() {
+        XCTAssertEqual(stack.description, "1 2 3 4", "Should evaluate to 1, 2, 3, 4")
     }
     
-    func test_ShouldFail() {
-        XCTFail("You must fail to succeed.")
+    func test_pop() {
+        XCTAssertEqual(stack.pop(), 4, "Should evaluate to 4")
     }
     
-    func test_ShouldPass() {
-        var stack = Stack<Int>()
-        stack.push(10)
-        
-        print("stack.description", stack.description)
-        XCTAssertEqual("10", stack.description, "should evaluate to 10")
+    func test_peek() {
+        XCTAssertEqual(stack.peek(), 4)
+    }
+    
+    func test_isEmpty() {
+        XCTAssertFalse(stack.isEmpty)
+    }
+    
+    func test_initWithArray() {
+        let array = [1, 2, 3, 4]
+        XCTAssertEqual(stack, Stack(array))
+    }
+    
+    func test_arrayLiteral() {
+        let stack: Stack = ["blueberry", "plain", "potato"]
+        XCTAssertEqual(stack, ["blueberry", "plain", "potato"])
     }
 }
-
 
 // Call Tests
 TestRunner().runTests(testClass: StackTests.self)
