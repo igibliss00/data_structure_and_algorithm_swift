@@ -61,15 +61,21 @@ final class BinaryTreeTestCase: XCTestCase {
     }
     
     func test_traverseInOrder() {
-        
+        var testArray: [Int] = []
+        tree.traverseInOrder { testArray.append($0) }
+        XCTAssertEqual(testArray, [0, 1, 5, 7, 8, 9])
     }
     
     func test_tarversePreOrder() {
-        
+        var testArr: [Int] = []
+        tree.traversePreOrder { testArr.append($0) }
+        XCTAssertEqual(testArr, [7, 1, 0, 5, 9, 8])
     }
     
     func trest_traversePostOrder() {
-        
+        var testArr: [Int] = []
+        tree.traversePostOrder { testArr.append($0) }
+        XCTAssertEqual(testArr, [0, 5, 1, 8, 9, 7])
     }
 }
 
