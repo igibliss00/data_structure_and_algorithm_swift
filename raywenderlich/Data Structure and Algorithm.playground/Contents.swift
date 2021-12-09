@@ -79,10 +79,17 @@ final class BinaryTreeTestCase: XCTestCase {
     }
 }
 
+final class BinarySearchTestCase: XCTestCase {
+    func test_binarySearch() {
+        let array = [1, 5, 18, 32, 33, 33, 47, 502]
+        XCTAssertEqual(array.binarySearch(for: 5), 1)
+    }
+}
 
 // Call Tests
 //TestRunner().runTests(testClass: StackTests.self)
-TestRunner().runTests(testClass: BinaryTreeTestCase.self)
+//TestRunner().runTests(testClass: BinaryTreeTestCase.self)
+TestRunner().runTests(testClass: BinarySearchTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
