@@ -86,10 +86,21 @@ final class BinarySearchTestCase: XCTestCase {
     }
 }
 
+final class AdjacencyListGraphTestCase: XCTestCase {
+    func test_vertex() {
+        let vertex = Vertex(data: 1, index: 0)
+        XCTAssertEqual(vertex.description, "0: 1")
+        
+        let vertex2 = Vertex(data: 1, index: 0)
+        XCTAssertTrue(vertex == vertex2)
+    }
+}
+
 // Call Tests
 //TestRunner().runTests(testClass: StackTests.self)
 //TestRunner().runTests(testClass: BinaryTreeTestCase.self)
-TestRunner().runTests(testClass: BinarySearchTestCase.self)
+//TestRunner().runTests(testClass: BinarySearchTestCase.self)
+TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
