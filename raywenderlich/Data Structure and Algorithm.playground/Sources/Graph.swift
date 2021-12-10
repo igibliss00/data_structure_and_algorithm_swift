@@ -248,3 +248,32 @@ open class AdjacencyListGraph<T>: AbstractGraph<T> where T: Hashable {
     }
 }
 
+open class AdjacentMatrixGraph<T>: AbstractGraph<T> where T: Hashable {
+    public var adjacentMatric: [[Double?]] = []
+    public var _vertices: [Vertex<T>] = []
+    
+    public required init() {
+        super.init()
+    }
+    
+    public required init(fromGraph graph: AbstractGraph<T>) {
+        super.init(fromGraph: graph)
+    }
+    
+    open override var vertices: [Vertex<T>] {
+        return _vertices
+    }
+    
+    open override var edges: [Edge<T>] {
+        var edges = [Edge<T>]()
+        for row in 0..<adjacentMatric.count {
+            for column in 0..<adjacentMatric.count {
+                if let weight = adjacentMatric[row][column] {
+                    edges.append(Edge(from: vertices[row], to: vertices[column], weight: weight))
+                }
+            }
+        }
+        
+        return edges
+    }
+}

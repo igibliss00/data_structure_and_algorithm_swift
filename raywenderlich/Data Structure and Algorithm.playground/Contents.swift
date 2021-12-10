@@ -135,9 +135,9 @@ final class AdjacencyListGraphTestCase: XCTestCase {
 }
 
 // Call Tests
-TestRunner().runTests(testClass: StackTests.self)
-TestRunner().runTests(testClass: BinaryTreeTestCase.self)
-TestRunner().runTests(testClass: BinarySearchTestCase.self)
+//TestRunner().runTests(testClass: StackTests.self)
+//TestRunner().runTests(testClass: BinaryTreeTestCase.self)
+//TestRunner().runTests(testClass: BinarySearchTestCase.self)
 TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
