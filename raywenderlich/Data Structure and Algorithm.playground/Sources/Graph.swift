@@ -50,6 +50,12 @@ public struct Edge<T>: Equatable where T: Hashable {
     public var from: Vertex<T>
     public var to: Vertex<T>
     public var weight: Double?
+    
+    public init(from: Vertex<T>, to: Vertex<T>, weight: Double?) {
+        self.from = from
+        self.to = to
+        self.weight = weight
+    }
 }
 
 extension Edge: CustomStringConvertible {
@@ -93,6 +99,11 @@ extension Edge: Hashable {
 public struct Vertex<T>: Equatable where T: Hashable {
     public var data: T
     public var index: Int
+    
+    public init(data: T, index: Int) {
+        self.data = data
+        self.index = index
+    }
 }
 
 extension Vertex: CustomStringConvertible {
@@ -216,21 +227,23 @@ open class AdjacencyListGraph<T>: AbstractGraph<T> where T: Hashable {
     open override var description: String {
         var rows = [String]()
         for edgeList in adjacencyList {
+            
             guard let edges = edgeList.edges else {
                 continue
             }
-
+            
             var row = [String]()
             for edge in edges {
                 var value = "\(edge.to.data)"
                 if edge.weight != nil {
-                    value = "\(value): \(edge.weight!)"
+                    value = "(\(value): \(edge.weight!))"
                 }
                 row.append(value)
             }
-
+            
             rows.append("\(edgeList.vertex.data) -> [\(row.joined(separator: ", "))]")
         }
+        
         return rows.joined(separator: "\n")
     }
 }

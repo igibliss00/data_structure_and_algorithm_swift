@@ -87,19 +87,57 @@ final class BinarySearchTestCase: XCTestCase {
 }
 
 final class AdjacencyListGraphTestCase: XCTestCase {
+    var fromVertex: Vertex<Int>!
+    var toVertex: Vertex<Int>!
+    var edge: Edge<Int>!
+    
     func test_vertex() {
-        let vertex = Vertex(data: 1, index: 0)
-        XCTAssertEqual(vertex.description, "0: 1")
+        fromVertex = Vertex(data: 1, index: 0)
+        XCTAssertEqual(fromVertex.description, "0: 1")
         
-        let vertex2 = Vertex(data: 1, index: 0)
-        XCTAssertTrue(vertex == vertex2)
+        toVertex = Vertex(data: 1, index: 1)
+        XCTAssertEqual(toVertex.description, "1: 1")
+        XCTAssertTrue(fromVertex != toVertex)
     }
+    
+    func test_edge() {
+        fromVertex = Vertex(data: 1, index: 0)
+        toVertex = Vertex(data: 1, index: 1)
+
+        edge = Edge(from: fromVertex, to: toVertex, weight: 10)
+        XCTAssertEqual(edge.description, "0: 1 - 10.0 -> 1: 1")
+
+        let edge2 = Edge(from: toVertex, to: fromVertex, weight: 20)
+        XCTAssertTrue(edge != edge2)
+    }
+    
+    func test_graph() {
+        let graph = AdjacencyListGraph<String>()
+        
+        let a = graph.createVertex("a")
+        XCTAssertEqual(a.data, "a")
+        XCTAssertTrue(graph.vertices.count == 1)
+
+        let b = graph.createVertex("b")
+        XCTAssertEqual(b.data, "b")
+        XCTAssertTrue(graph.vertices.count == 2)
+
+        let c = graph.createVertex("c")
+        XCTAssertEqual(c.data, "c")
+        XCTAssertTrue(graph.vertices.count == 3)
+        
+        graph.addDirectedEdge(a, to: b, withWeight: 1.0)
+        graph.addDirectedEdge(b, to: c, withWeight: 2.0)
+        graph.addDirectedEdge(a, to: c, withWeight: -5.5)
+        
+        let expectedValue = "a -> [(b: 1.0), (c: -5.5)]\nb -> [(c: 2.0)]"
+        XCTAssertEqual(graph.description, expectedValue)    }
 }
 
 // Call Tests
-//TestRunner().runTests(testClass: StackTests.self)
-//TestRunner().runTests(testClass: BinaryTreeTestCase.self)
-//TestRunner().runTests(testClass: BinarySearchTestCase.self)
+TestRunner().runTests(testClass: StackTests.self)
+TestRunner().runTests(testClass: BinaryTreeTestCase.self)
+TestRunner().runTests(testClass: BinarySearchTestCase.self)
 TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
