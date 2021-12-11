@@ -111,7 +111,7 @@ final class AdjacencyListGraphTestCase: XCTestCase {
         XCTAssertTrue(edge != edge2)
     }
     
-    func test_graph() {
+    func test_adjacencyList() {
         let graph = AdjacencyListGraph<String>()
         
         let a = graph.createVertex("a")
@@ -131,7 +131,42 @@ final class AdjacencyListGraphTestCase: XCTestCase {
         graph.addDirectedEdge(a, to: c, withWeight: -5.5)
         
         let expectedValue = "a -> [(b: 1.0), (c: -5.5)]\nb -> [(c: 2.0)]"
-        XCTAssertEqual(graph.description, expectedValue)    }
+        XCTAssertEqual(graph.description, expectedValue)
+    }
+    
+    func test_adjacencyMatrix() {
+//        let graph = AdjacencyMatrixGraph<String>()
+//
+//        let a = graph.createVertex("a")
+//        XCTAssertEqual(a.data, "a")
+//        XCTAssertTrue(graph.vertices.count == 1)
+//
+//        let b = graph.createVertex("b")
+//        XCTAssertEqual(b.data, "b")
+//        XCTAssertTrue(graph.vertices.count == 2)
+//
+//        let c = graph.createVertex("c")
+//        XCTAssertEqual(c.data, "c")
+//        XCTAssertTrue(graph.vertices.count == 3)
+//
+//        graph.addDirectedEdge(a, to: b, withWeight: 1.0)
+//        graph.addDirectedEdge(b, to: c, withWeight: 2.0)
+//        graph.addDirectedEdge(a, to: c, withWeight: -5.5)
+        
+        
+        let graph = AdjacencyMatrixGraph<String>()
+        
+        let a = graph.createVertex("a")
+        let b = graph.createVertex("b")
+        let c = graph.createVertex("c")
+        
+        graph.addDirectedEdge(a, to: b, withWeight: 1.0)
+        graph.addDirectedEdge(b, to: c, withWeight: 2.0)
+        
+        let expectedValue = "  ø   1.0   ø  \n  ø    ø   2.0 \n  ø    ø    ø  "
+        XCTAssertEqual(graph.description, expectedValue)
+        
+    }
 }
 
 // Call Tests
