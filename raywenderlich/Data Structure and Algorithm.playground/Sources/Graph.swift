@@ -1,19 +1,5 @@
 import Foundation
 
-// MARK: - EdgeList
-private class EdgeList<T> where T: Hashable {
-    var vertex: Vertex<T>
-    var edges: [Edge<T>]?
-    
-    init(vertex: Vertex<T>) {
-        self.vertex = vertex
-    }
-    
-    func addEdge(_ edge: Edge<T>) {
-        edges?.append(edge)
-    }
-}
-
 // MARK: - Vertex
 public struct Vertex<T>: Equatable where T: Hashable {
     public var data: T
@@ -100,6 +86,19 @@ extension Edge: Hashable {
     }
 }
 
+// MARK: - EdgeList
+private class EdgeList<T> where T: Hashable {
+    var vertex: Vertex<T>
+    var edges: [Edge<T>]?
+    
+    init(vertex: Vertex<T>) {
+        self.vertex = vertex
+    }
+    
+    func addEdge(_ edge: Edge<T>) {
+        edges?.append(edge)
+    }
+}
 
 // MARK: - AbstractGraph
 open class AbstractGraph<T>: CustomStringConvertible where T: Hashable {
@@ -147,6 +146,7 @@ open class AbstractGraph<T>: CustomStringConvertible where T: Hashable {
     }
 }
 
+// MARK: - AdjacencyMatrixGraph
 open class AdjacencyMatrixGraph<T>: AbstractGraph<T> where T: Hashable {
     
     // If adjacencyMatrix[i][j] is not nil, then there is an edge from
@@ -251,6 +251,7 @@ open class AdjacencyMatrixGraph<T>: AbstractGraph<T> where T: Hashable {
     
 }
 
+// MARK: - AdjacencyListGraph
 open class AdjacencyListGraph<T>: AbstractGraph<T> where T: Hashable {
     fileprivate var adjacencyList: [EdgeList<T>] = []
     

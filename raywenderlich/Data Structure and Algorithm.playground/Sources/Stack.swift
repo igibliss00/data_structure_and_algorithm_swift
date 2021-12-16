@@ -3,7 +3,7 @@ import Foundation
 public struct Stack<Element: Equatable>: Equatable {
     private var storage: [Element] = []
     public var isEmpty: Bool {
-        return peek() == nil
+            return peek() == nil
     }
     
     public init() {}

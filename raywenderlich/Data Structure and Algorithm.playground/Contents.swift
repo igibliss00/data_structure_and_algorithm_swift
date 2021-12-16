@@ -90,16 +90,16 @@ final class AdjacencyListGraphTestCase: XCTestCase {
     var fromVertex: Vertex<Int>!
     var toVertex: Vertex<Int>!
     var edge: Edge<Int>!
-    
+
     func test_vertex() {
         fromVertex = Vertex(data: 1, index: 0)
         XCTAssertEqual(fromVertex.description, "0: 1")
-        
+
         toVertex = Vertex(data: 1, index: 1)
         XCTAssertEqual(toVertex.description, "1: 1")
         XCTAssertTrue(fromVertex != toVertex)
     }
-    
+
     func test_edge() {
         fromVertex = Vertex(data: 1, index: 0)
         toVertex = Vertex(data: 1, index: 1)
@@ -110,10 +110,10 @@ final class AdjacencyListGraphTestCase: XCTestCase {
         let edge2 = Edge(from: toVertex, to: fromVertex, weight: 20)
         XCTAssertTrue(edge != edge2)
     }
-    
+
     func test_adjacencyList() {
         let graph = AdjacencyListGraph<String>()
-        
+
         let a = graph.createVertex("a")
         XCTAssertEqual(a.data, "a")
         XCTAssertTrue(graph.vertices.count == 1)
@@ -125,47 +125,60 @@ final class AdjacencyListGraphTestCase: XCTestCase {
         let c = graph.createVertex("c")
         XCTAssertEqual(c.data, "c")
         XCTAssertTrue(graph.vertices.count == 3)
-        
+
         graph.addDirectedEdge(a, to: b, withWeight: 1.0)
         graph.addDirectedEdge(b, to: c, withWeight: 2.0)
         graph.addDirectedEdge(a, to: c, withWeight: -5.5)
-        
+
         let expectedValue = "a -> [(b: 1.0), (c: -5.5)]\nb -> [(c: 2.0)]"
         XCTAssertEqual(graph.description, expectedValue)
     }
-    
+
     func test_adjacencyMatrix() {
-//        let graph = AdjacencyMatrixGraph<String>()
-//
-//        let a = graph.createVertex("a")
-//        XCTAssertEqual(a.data, "a")
-//        XCTAssertTrue(graph.vertices.count == 1)
-//
-//        let b = graph.createVertex("b")
-//        XCTAssertEqual(b.data, "b")
-//        XCTAssertTrue(graph.vertices.count == 2)
-//
-//        let c = graph.createVertex("c")
-//        XCTAssertEqual(c.data, "c")
-//        XCTAssertTrue(graph.vertices.count == 3)
-//
-//        graph.addDirectedEdge(a, to: b, withWeight: 1.0)
-//        graph.addDirectedEdge(b, to: c, withWeight: 2.0)
-//        graph.addDirectedEdge(a, to: c, withWeight: -5.5)
-        
-        
         let graph = AdjacencyMatrixGraph<String>()
-        
+
         let a = graph.createVertex("a")
+        XCTAssertEqual(a.data, "a")
+        XCTAssertTrue(graph.vertices.count == 1)
+
         let b = graph.createVertex("b")
+        XCTAssertEqual(b.data, "b")
+        XCTAssertTrue(graph.vertices.count == 2)
+
         let c = graph.createVertex("c")
-        
+        XCTAssertEqual(c.data, "c")
+        XCTAssertTrue(graph.vertices.count == 3)
+
         graph.addDirectedEdge(a, to: b, withWeight: 1.0)
         graph.addDirectedEdge(b, to: c, withWeight: 2.0)
-        
+
         let expectedValue = "  ø   1.0   ø  \n  ø    ø   2.0 \n  ø    ø    ø  "
         XCTAssertEqual(graph.description, expectedValue)
+    }
+}
+
+final class SortTestCase: XCTestCase {
+    let data = [3, 12, 4, 2, 1, 7, 11, 5]
+    let sortedData = [1, 2, 3, 4, 5, 7, 11, 12]
+    func test_bubbleSort() {
+        let bubbleSort = BubbleSort<Int>()
+        let sorted = bubbleSort.sort(data, <)
+        XCTAssertEqual(sorted, sortedData)
+    }
+    
+    func test_selectionSort() {
+        let selectionSort = SelectionSort<Int>()
+        let sorted = selectionSort.sort(data, <)
+        XCTAssertEqual(sorted, sortedData)
+    }
+    
+    func test_inserSort() {
+        let insertSort = InsertSort<Int>()
+        let sorted = insertSort.sort(data)
+        XCTAssertEqual(sorted, sortedData)
         
+        let sorted2 = insertSort.sort2(data, >)
+        XCTAssertEqual(sorted2, sortedData)
     }
 }
 
@@ -173,7 +186,8 @@ final class AdjacencyListGraphTestCase: XCTestCase {
 //TestRunner().runTests(testClass: StackTests.self)
 //TestRunner().runTests(testClass: BinaryTreeTestCase.self)
 //TestRunner().runTests(testClass: BinarySearchTestCase.self)
-TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
+//TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
+TestRunner().runTests(testClass: SortTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
