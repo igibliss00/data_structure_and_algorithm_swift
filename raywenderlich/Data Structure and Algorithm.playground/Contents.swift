@@ -193,7 +193,45 @@ final class SortTestCase: XCTestCase {
         XCTAssertEqual(sorted, sortedData)
         
         let sorted2 = insertSort.sort(data, >)
-        XCTAssertEqual(sorted2, sortedData)
+        XCTAssertEqual(sorted2, [12, 11, 7, 5, 4, 3, 2, 1])
+    }
+}
+
+final class QueueTestCase: XCTestCase {
+    func test_queue() {
+        var queue = Queue<Int>()
+        queue.enqueue(10)
+        queue.enqueue(20)
+        queue.enqueue(30)
+        queue.enqueue(40)
+        
+        let count = queue.count
+        XCTAssertEqual(count, 4)
+        XCTAssertEqual(queue.isEmpty, false)
+        XCTAssertEqual(queue.front, 10)
+        
+        let firstDequeued = queue.dequeue()
+        let secondDequeued = queue.dequeue()
+        XCTAssertEqual(firstDequeued, 10)
+        XCTAssertEqual(secondDequeued, 20)
+    }
+    
+    func test_enhancedQueue() {
+        var queue = EnhancedQueue<Int>()
+        queue.enqueue(10)
+        queue.enqueue(20)
+        queue.enqueue(30)
+        queue.enqueue(40)
+        
+        let count = queue.count
+        XCTAssertEqual(count, 4)
+        XCTAssertEqual(queue.isEmpty, false)
+        XCTAssertEqual(queue.front, 10)
+        
+        let firstDequeued = queue.dequeue()
+        let secondDequeued = queue.dequeue()
+        XCTAssertEqual(firstDequeued, 10)
+        XCTAssertEqual(secondDequeued, 20)
     }
 }
 
@@ -203,7 +241,8 @@ final class SortTestCase: XCTestCase {
 //TestRunner().runTests(testClass: BinarySearchTestCase.self)
 //TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 //TestRunner().runTests(testClass: SortTestCase.self)
-TestRunner().runTests(testClass: LinterTestCase.self)
+//TestRunner().runTests(testClass: LinterTestCase.self)
+TestRunner().runTests(testClass: QueueTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
