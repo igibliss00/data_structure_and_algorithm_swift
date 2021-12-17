@@ -39,6 +39,21 @@ final class StackTests: XCTestCase {
     }
 }
 
+final class LinterTestCase: XCTestCase {
+    var linter = Linter()
+    
+    func test_Linter() {
+        let message = linter.lint("( var x = { y: [1, 2, 3] } )")
+        XCTAssertEqual(message, "No error found")
+        
+        let message2 = linter.lint("( var x = { y: [1, 2, 3] ) }")
+        XCTAssertEqual(message2, "Incorrect closing brace: ) at index 25")
+        
+        let message3 = linter.lint("( var x = { y: [1, 2, 3] }")
+        XCTAssertEqual(message3, "( does not have a closing brace")
+    }
+}
+
 final class BinaryTreeTestCase: XCTestCase {
     var tree: BinaryNode<Int> = {
         let zero = BinaryNode(0)
@@ -177,7 +192,7 @@ final class SortTestCase: XCTestCase {
         let sorted = insertSort.sort(data)
         XCTAssertEqual(sorted, sortedData)
         
-        let sorted2 = insertSort.sort2(data, >)
+        let sorted2 = insertSort.sort(data, >)
         XCTAssertEqual(sorted2, sortedData)
     }
 }
@@ -187,7 +202,8 @@ final class SortTestCase: XCTestCase {
 //TestRunner().runTests(testClass: BinaryTreeTestCase.self)
 //TestRunner().runTests(testClass: BinarySearchTestCase.self)
 //TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
-TestRunner().runTests(testClass: SortTestCase.self)
+//TestRunner().runTests(testClass: SortTestCase.self)
+TestRunner().runTests(testClass: LinterTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {

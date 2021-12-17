@@ -18,4 +18,3 @@ public struct BubbleSort<T> where T: Comparable {
         return array
     }
 }
-
