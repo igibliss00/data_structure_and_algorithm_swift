@@ -235,6 +235,25 @@ final class QueueTestCase: XCTestCase {
     }
 }
 
+final class QuicksortTest: XCTestCase {
+    func test_quicksort() {
+        let array = [0, 5, 2, 1, 6, 3]
+        var sortableArray = SortableArray<Int>(array)
+        guard let sorted = sortableArray.quicksort(0, array.count - 1) else {
+            return
+        }
+        
+        XCTAssertEqual(sorted, [0, 1, 2, 3, 5, 6])
+    }
+    
+    func test_quickSelect() {
+        let array = [0, 50, 20, 10, 60, 30]
+        var sortableArray = SortableArray<Int>(array)
+        let value = sortableArray.quickSelect(kthLowestValue: 1, leftIndex: 0, rightIndex: array.count - 1)
+        XCTAssertEqual(value, 30)
+    }
+}
+
 // Call Tests
 //TestRunner().runTests(testClass: StackTests.self)
 //TestRunner().runTests(testClass: BinaryTreeTestCase.self)
@@ -242,7 +261,8 @@ final class QueueTestCase: XCTestCase {
 //TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 //TestRunner().runTests(testClass: SortTestCase.self)
 //TestRunner().runTests(testClass: LinterTestCase.self)
-TestRunner().runTests(testClass: QueueTestCase.self)
+//TestRunner().runTests(testClass: QueueTestCase.self)
+TestRunner().runTests(testClass: QuicksortTest.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
