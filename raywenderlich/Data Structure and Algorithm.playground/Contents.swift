@@ -254,6 +254,26 @@ final class QuicksortTest: XCTestCase {
     }
 }
 
+final class LinkListTest: XCTestCase {
+    func test_linkedList() {
+        let linkedList = LinkedList<Int>()
+        for i in stride(from: 0, to: 100, by: 10) {
+            linkedList.append(i)
+        }
+        
+        let startIndex = linkedList.startIndex
+        let expectedStartIndex = LinkedListIndex<Int>(node: linkedList.head, tag: 0)
+        XCTAssertEqual(startIndex, expectedStartIndex)
+        
+        let endIndex = linkedList.endIndex
+        let expectedEndIndex = LinkedListIndex<Int>(node: linkedList.head, tag: 100)
+        XCTAssertEqual(endIndex, expectedEndIndex)
+        
+        let testIndexContent = linkedList.index(after: LinkedListIndex<Int>(node: linkedList.head, tag: 50))
+        print("testIndexContent", testIndexContent)
+    }
+}
+
 // Call Tests
 //TestRunner().runTests(testClass: StackTests.self)
 //TestRunner().runTests(testClass: BinaryTreeTestCase.self)
@@ -262,7 +282,8 @@ final class QuicksortTest: XCTestCase {
 //TestRunner().runTests(testClass: SortTestCase.self)
 //TestRunner().runTests(testClass: LinterTestCase.self)
 //TestRunner().runTests(testClass: QueueTestCase.self)
-TestRunner().runTests(testClass: QuicksortTest.self)
+//TestRunner().runTests(testClass: QuicksortTest.self)
+TestRunner().runTests(testClass: LinkListTest.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
