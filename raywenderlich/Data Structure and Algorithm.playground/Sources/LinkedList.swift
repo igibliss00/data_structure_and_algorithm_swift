@@ -16,7 +16,7 @@ public final class LinkedList<T> {
     
     
     /// The head of the Linked List
-    private(set) var head: Node?
+    public private(set) var head: Node?
     
     /// Computed property to iterate through the linked list and return the last node in the list (if any)
     public var last: Node? {
@@ -329,6 +329,11 @@ extension LinkedList: Collection {
 public struct LinkedListIndex<T>: Comparable {
     fileprivate let node: LinkedList<T>.LinkedListNode<T>?
     fileprivate let tag: Int
+    
+    public init(node: LinkedList<T>.LinkedListNode<T>?, tag: Int) {
+        self.node = node
+        self.tag = tag
+    }
     
     public static func==<T>(lhs: LinkedListIndex<T>, rhs: LinkedListIndex<T>) -> Bool {
         return (lhs.tag == rhs.tag)

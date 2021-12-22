@@ -54,7 +54,7 @@ final class LinterTestCase: XCTestCase {
     }
 }
 
-final class BinaryTreeTestCase: XCTestCase {
+final class FirstBinaryTreeTestCase: XCTestCase {
     var tree: BinaryNode<Int> = {
         let zero = BinaryNode(0)
         let one = BinaryNode(1)
@@ -92,12 +92,37 @@ final class BinaryTreeTestCase: XCTestCase {
         tree.traversePostOrder { testArr.append($0) }
         XCTAssertEqual(testArr, [0, 5, 1, 8, 9, 7])
     }
-}
-
-final class BinarySearchTestCase: XCTestCase {
+    
     func test_binarySearch() {
         let array = [1, 5, 18, 32, 33, 33, 47, 502]
         XCTAssertEqual(array.binarySearch(for: 5), 1)
+    }
+}
+
+final class SecondBinaryTreeTestCase: XCTestCase {
+    var tree: BinaryTree<Int>!
+    
+    override func setUp() {
+        let leftChild = BinaryTree<Int>.Node<Int>(value: 10)
+        let rightChild = BinaryTree<Int>.Node<Int>(value: 30)
+        let parent = BinaryTree<Int>.Node<Int>(value: 20, leftChild: leftChild, rightChild: rightChild)
+        tree = BinaryTree<Int>(rootNode: parent)
+    }
+    
+    func test_binarySearch() {
+        let node = tree.searchTree(30, node: tree.rootNode)
+        XCTAssertEqual(node?.value, 30)
+    }
+    
+    func test_binaryTreeInsert() {
+        tree.insert(40, existingNode: tree.rootNode)
+        let node = tree.searchTree(40, node: tree.rootNode)
+        XCTAssertEqual(node?.value, 40)
+    }
+    
+    func test_binaryTreeInOrderTraversal() {
+        let list = tree.traverse(tree.rootNode)
+        XCTAssertEqual(list, [10, 20, 30])
     }
 }
 
@@ -266,24 +291,30 @@ final class LinkListTest: XCTestCase {
         XCTAssertEqual(startIndex, expectedStartIndex)
         
         let endIndex = linkedList.endIndex
-        let expectedEndIndex = LinkedListIndex<Int>(node: linkedList.head, tag: 100)
+        let expectedEndIndex = LinkedListIndex<Int>(node: linkedList.last, tag: 10)
         XCTAssertEqual(endIndex, expectedEndIndex)
         
-        let testIndexContent = linkedList.index(after: LinkedListIndex<Int>(node: linkedList.head, tag: 50))
-        print("testIndexContent", testIndexContent)
+        let node = linkedList.node(at: 5)
+        let testIndex = linkedList.index(after: LinkedListIndex<Int>(node: node, tag: 5))
+        let next = linkedList.node(at: 6)
+        let expectedTestIndex = LinkedListIndex<Int>(node: next, tag: 6)
+        XCTAssertEqual(testIndex, expectedTestIndex)
+        
+        let random = linkedList.randomElement()
+        XCTAssertNotNil(random)    
     }
 }
 
 // Call Tests
 //TestRunner().runTests(testClass: StackTests.self)
-//TestRunner().runTests(testClass: BinaryTreeTestCase.self)
-//TestRunner().runTests(testClass: BinarySearchTestCase.self)
+//TestRunner().runTests(testClass: FirstBinaryTreeTestCase.self)
+TestRunner().runTests(testClass: SecondBinaryTreeTestCase.self)
 //TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 //TestRunner().runTests(testClass: SortTestCase.self)
 //TestRunner().runTests(testClass: LinterTestCase.self)
 //TestRunner().runTests(testClass: QueueTestCase.self)
 //TestRunner().runTests(testClass: QuicksortTest.self)
-TestRunner().runTests(testClass: LinkListTest.self)
+//TestRunner().runTests(testClass: LinkListTest.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
