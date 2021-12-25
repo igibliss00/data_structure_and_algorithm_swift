@@ -111,16 +111,17 @@ public final class BinaryTree<T: Comparable> {
         }
     }
     
+    @discardableResult
     public func traverse(_ node: Node<T>?) -> [T]? {
         guard node != nil else {
             return nil
         }
         
-        _ = traverse(node?.leftChild)
+        traverse(node?.leftChild)
         if let node = node {
             list.append(node.value)
         }
-        _ = traverse(node?.rightChild)
+        traverse(node?.rightChild)
         
         return list
     }

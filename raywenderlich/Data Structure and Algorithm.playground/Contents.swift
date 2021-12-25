@@ -81,7 +81,7 @@ final class FirstBinaryTreeTestCase: XCTestCase {
         XCTAssertEqual(testArray, [0, 1, 5, 7, 8, 9])
     }
     
-    func test_tarversePreOrder() {
+    func test_traversePreOrder() {
         var testArr: [Int] = []
         tree.traversePreOrder { testArr.append($0) }
         XCTAssertEqual(testArr, [7, 1, 0, 5, 9, 8])
@@ -197,19 +197,61 @@ final class AdjacencyListGraphTestCase: XCTestCase {
     }
 }
 
+final class PersonNetworkTestCase: XCTestCase {
+    var alice: Person!
+    var bob: Person!
+    var fred: Person!
+    var helen: Person!
+    var candy: Person!
+    var derek: Person!
+    var gina: Person!
+    var irena: Person!
+    var elaine: Person!
+    
+    override func setUp() {
+        alice = Person(name: "Alice")
+        bob = Person(name: "Bob")
+        fred = Person(name: "Fred")
+        helen = Person(name: "Helen")
+        candy = Person(name: "Candy")
+        derek = Person(name: "Derek")
+        gina = Person(name: "Gina")
+        irena = Person(name: "Irena")
+        elaine = Person(name: "Elaine")
+        
+        alice.addFriend(bob)
+        bob.addFriend(fred)
+        fred.addFriend(helen)
+        alice.addFriend(candy)
+        alice.addFriend(derek)
+        alice.addFriend(elaine)
+        derek.addFriend(gina)
+        gina.addFriend(irena)
+    }
+    
+    func test_treeTraversal() {
+        alice.displayNetwork()
+    }
+}
+
 final class SortTestCase: XCTestCase {
     let data = [3, 12, 4, 2, 1, 7, 11, 5]
     let sortedData = [1, 2, 3, 4, 5, 7, 11, 12]
+    
     func test_bubbleSort() {
         let bubbleSort = BubbleSort<Int>()
         let sorted = bubbleSort.sort(data, <)
         XCTAssertEqual(sorted, sortedData)
+        
+        checkSortAlgorithm(bubbleSort.sort2)
     }
     
     func test_selectionSort() {
         let selectionSort = SelectionSort<Int>()
         let sorted = selectionSort.sort(data, <)
         XCTAssertEqual(sorted, sortedData)
+        
+        checkSortAlgorithm(selectionSort.sort2)
     }
     
     func test_inserSort() {
@@ -261,7 +303,7 @@ final class QueueTestCase: XCTestCase {
 }
 
 final class QuicksortTest: XCTestCase {
-    func test_quicksort() {
+    func test_sortableArray() {
         let array = [0, 5, 2, 1, 6, 3]
         var sortableArray = SortableArray<Int>(array)
         guard let sorted = sortableArray.quicksort(0, array.count - 1) else {
@@ -276,6 +318,32 @@ final class QuicksortTest: XCTestCase {
         var sortableArray = SortableArray<Int>(array)
         let value = sortableArray.quickSelect(kthLowestValue: 1, leftIndex: 0, rightIndex: array.count - 1)
         XCTAssertEqual(value, 30)
+    }
+    
+    func testQuickSort() {
+        checkSortAlgorithm(quicksort)
+    }
+    
+    fileprivate typealias QuicksortFunction = (inout [Int], _ low: Int, _ high: Int) -> Void
+
+    fileprivate func checkQuicksort(_ function: QuicksortFunction) {
+        checkSortAlgorithm { (a: [Int]) -> [Int] in
+            var b = a
+            function(&b, 0, b.count - 1)
+            return b
+        }
+    }
+    
+    func testQuicksortLomuto() {
+        checkQuicksort(quicksortLomuto)
+    }
+    
+    func testQuicksortHoare() {
+        checkQuicksort(quicksortHoare)
+    }
+    
+    func testQuicksortRandom() {
+        checkQuicksort(quicksortRandom)
     }
 }
 
@@ -308,13 +376,14 @@ final class LinkListTest: XCTestCase {
 // Call Tests
 //TestRunner().runTests(testClass: StackTests.self)
 //TestRunner().runTests(testClass: FirstBinaryTreeTestCase.self)
-TestRunner().runTests(testClass: SecondBinaryTreeTestCase.self)
+//TestRunner().runTests(testClass: SecondBinaryTreeTestCase.self)
 //TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
 //TestRunner().runTests(testClass: SortTestCase.self)
 //TestRunner().runTests(testClass: LinterTestCase.self)
 //TestRunner().runTests(testClass: QueueTestCase.self)
-//TestRunner().runTests(testClass: QuicksortTest.self)
+TestRunner().runTests(testClass: QuicksortTest.self)
 //TestRunner().runTests(testClass: LinkListTest.self)
+//TestRunner().runTests(testClass: PersonNetworkTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {

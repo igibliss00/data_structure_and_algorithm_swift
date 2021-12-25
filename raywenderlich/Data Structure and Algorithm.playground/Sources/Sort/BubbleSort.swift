@@ -17,4 +17,18 @@ public struct BubbleSort<T> where T: Comparable {
 
         return array
     }
+    
+    public func sort2(_ data: [T]) -> [T] {
+        var array = data
+        for i in 0..<array.count {
+            for j in 1..<array.count - i {
+                if array[j] < array[j-1] {
+                    let tmp = array[j-1]
+                    array[j-1] = array[j]
+                    array[j] = tmp
+                }
+            }
+        }
+        return array
+    }
 }
