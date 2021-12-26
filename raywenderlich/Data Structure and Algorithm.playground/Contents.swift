@@ -348,7 +348,7 @@ final class QuicksortTest: XCTestCase {
 }
 
 final class LinkListTest: XCTestCase {
-    func test_linkedList() {
+    func test_doublyLinkedList() {
         let linkedList = LinkedList<Int>()
         for i in stride(from: 0, to: 100, by: 10) {
             linkedList.append(i)
@@ -371,6 +371,28 @@ final class LinkListTest: XCTestCase {
         let random = linkedList.randomElement()
         XCTAssertNotNil(random)    
     }
+    
+    func test_singlyLinkedList() {
+        let linkedList = SinglyLinkedList<Int>()
+        for i in stride(from: 10, to: 100, by: 10) {
+            linkedList.append(i)
+        }
+        
+        print(linkedList.description)
+        
+//        let foundNode = linkedList.find(index: 3)
+//        print(foundNode?.value)
+        
+        let deleted0 = linkedList.deleteNode(index: 7)
+        print(deleted0?.value)
+        print(linkedList.description)
+        let deleted1 = linkedList.deleteNode(index: 3)
+        print(deleted1?.value)
+        print(linkedList.description)
+        let deleted2 = linkedList.deleteNode(index: 0)
+        print(deleted2)
+        print(linkedList.description)
+    }
 }
 
 // Call Tests
@@ -381,8 +403,8 @@ final class LinkListTest: XCTestCase {
 //TestRunner().runTests(testClass: SortTestCase.self)
 //TestRunner().runTests(testClass: LinterTestCase.self)
 //TestRunner().runTests(testClass: QueueTestCase.self)
-TestRunner().runTests(testClass: QuicksortTest.self)
-//TestRunner().runTests(testClass: LinkListTest.self)
+//TestRunner().runTests(testClass: QuicksortTest.self)
+TestRunner().runTests(testClass: LinkListTest.self)
 //TestRunner().runTests(testClass: PersonNetworkTestCase.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
