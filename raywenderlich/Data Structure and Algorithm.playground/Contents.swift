@@ -377,21 +377,52 @@ final class LinkListTest: XCTestCase {
         for i in stride(from: 10, to: 100, by: 10) {
             linkedList.append(i)
         }
-        
-        print(linkedList.description)
-        
-//        let foundNode = linkedList.find(index: 3)
-//        print(foundNode?.value)
-        
+
+        let foundNode = linkedList.find(index: 3)
+        XCTAssertEqual(foundNode?.value, 40)
+
         let deleted0 = linkedList.deleteNode(index: 7)
-        print(deleted0?.value)
-        print(linkedList.description)
+        XCTAssertEqual(deleted0?.value, 80)
+        XCTAssertEqual(linkedList.description, "[ 10, 20, 30, 40, 50, 60, 70, 90 ]")
         let deleted1 = linkedList.deleteNode(index: 3)
-        print(deleted1?.value)
-        print(linkedList.description)
+        XCTAssertEqual(deleted1?.value, 40)
+        XCTAssertEqual(linkedList.description, "[ 10, 20, 30, 50, 60, 70, 90 ]")
         let deleted2 = linkedList.deleteNode(index: 0)
-        print(deleted2)
-        print(linkedList.description)
+        XCTAssertEqual(deleted2?.value, 10)
+        XCTAssertEqual(linkedList.description, "[  ]")
+    }
+    
+    func test_baseLinkedList() {
+        var linkedList = BaseLinkedList<String>(["one", "two", "three"])
+        linkedList = BaseLinkedList<String>(copyReferencesFrom: linkedList)
+        linkedList = BaseLinkedList<String>(copyValuesFrom: linkedList)
+
+        var node = linkedList.firstNode
+        XCTAssertEqual(node?.value, "one")
+
+        node = linkedList.lastNode
+        XCTAssertEqual(node?.value, "three")
+
+        XCTAssertFalse(linkedList.isEmpty)
+
+        linkedList.append(last: "four")
+        XCTAssertEqual(linkedList.lastValue, "four")
+    }
+    
+    func test_enhancedLinkedList() {
+        let linkedList = EnhancedLinkedList(arrayLiteral: "one", "two", "three")
+        let mapped = linkedList.map { $0 + "!" }
+        let expectedMap = ["one!", "two!", "three!"]
+        XCTAssertEqual(mapped, expectedMap)
+        
+        let reduced = linkedList.reduce("", { "\($0)_\($1)" })
+        let expectedReduce = "_one_two_three"
+        XCTAssertEqual(reduced, expectedReduce)
+        XCTAssertEqual(linkedList.count, 3)
+        
+        
+        let found = linkedList.index(after: linkedList.startIndex)
+        print(found)
     }
 }
 

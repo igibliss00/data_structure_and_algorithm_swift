@@ -1,6 +1,7 @@
 import Foundation
 
-protocol Nodeable: AnyObject {
+// MARK: - Nodeable
+public protocol Nodeable: AnyObject {
     associatedtype Value
     var value: Value { get set }
     var next: Self? { get set }
@@ -8,24 +9,24 @@ protocol Nodeable: AnyObject {
 }
 
 extension Nodeable where Self.Value: Equatable {
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.value == rhs.value
     }
 }
 
 extension Nodeable {
-    var retainCount: Int {
+    public var retainCount: Int {
         CFGetRetainCount(self as CFTypeRef)
     }
 }
 
 extension Nodeable where Self: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         return "{ value: \(value), next: \(next == nil ? "Nil" : "Exists")}"
     }
 }
-
-protocol LinkedListable where Node.Value == Value {
+// MARK: - LinkedListable
+public protocol LinkedListable where Node.Value == Value {
     associatedtype Node: Nodeable
     associatedtype Value
     var firstNode: Node? { get set }
@@ -34,33 +35,33 @@ protocol LinkedListable where Node.Value == Value {
 }
 
 extension LinkedListable {
-    var firstValue: Value? {
+    public var firstValue: Value? {
         return firstNode?.value
     }
     
-    var lastValue: Value? {
+    public var lastValue: Value? {
         return lastNode?.value
     }
     
-    var isEmpty: Bool {
+    public var isEmpty: Bool {
         return firstNode == nil
     }
 }
 
 // MARK: - Initializers
 extension LinkedListable {
-    init(_ array: [Value]) {
+    public init(_ array: [Value]) {
         self.init()
         array.forEach { append(last: $0) }
     }
     
-    init(copyValuesFrom linkedList: Self) {
+    public init(copyValuesFrom linkedList: Self) {
         self.init()
         if linkedList.isEmpty { return }
         linkedList.forEachNode { append(last: $0.value)  }
     }
     
-    init(copyReferencesFrom linkedList: Self) {
+    public init(copyReferencesFrom linkedList: Self) {
         self.init()
         firstNode = linkedList.firstNode
         lastNode = linkedList.lastNode
@@ -89,7 +90,7 @@ extension LinkedListable {
         return resultNode
     }
     
-    func forEachWhile(closure: (Node) -> Bool) {
+    public func forEachWhile(closure: (Node) -> Bool) {
         var currentNode = self.firstNode
         while currentNode != nil {
             guard closure(currentNode!) else { return }
@@ -97,7 +98,7 @@ extension LinkedListable {
         }
     }
     
-    func forEachNode(closure: (Node) -> Void) {
+    public func forEachNode(closure: (Node) -> Void) {
         forEachWhile { closure($0); return true }
     }
 }
@@ -122,7 +123,7 @@ extension LinkedListable {
 
 // MARK: - CustomStringConvertible
 extension LinkedListable where Self: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         var value = [String]()
         forEachNode { value.append("\($0.value)")}
         return value.joined(separator: ", ")
@@ -131,26 +132,26 @@ extension LinkedListable where Self: CustomStringConvertible {
 
 // MARK: - ExpressibleByArrayLiteral
 extension LinkedListable where Self: ExpressibleByArrayLiteral, ArrayLiteralElement == Value {
-    init(arrayLiteral elements: Self.ArrayLiteralElement...) {
+    public init(arrayLiteral elements: Self.ArrayLiteralElement...) {
         self.init(elements)
     }
 }
 
 // MARK: - Sequence
 extension LinkedListable where Self: Sequence {
-    typealias Iterator = LinkedListIterator<Node>
-    func makeIterator() -> LinkedListIterator<Node> {
+    public typealias Iterator = LinkedListIterator<Node>
+    public func makeIterator() -> LinkedListIterator<Node> {
         return .init(firstNode)
     }
 }
 
-struct LinkedListIterator<Node>: IteratorProtocol where Node: Nodeable {
-    var currentNode: Node?
-    init(_ firstNode: Node?) {
+public struct LinkedListIterator<Node>: IteratorProtocol where Node: Nodeable {
+    public var currentNode: Node?
+    public init(_ firstNode: Node?) {
         self.currentNode = firstNode
     }
     
-    mutating func next() -> Node.Value? {
+    public mutating func next() -> Node.Value? {
         let node = currentNode
         currentNode = currentNode?.next
         return node?.value
@@ -159,8 +160,8 @@ struct LinkedListIterator<Node>: IteratorProtocol where Node: Nodeable {
 
 // MARK: - Collection
 extension LinkedListable where Self: Collection, Self.Index == Int, Self.Element == Value {
-    var startIndex: Index { 0 }
-    var endIndex: Index {
+    public var startIndex: Index { 0 }
+    public var endIndex: Index {
         guard !isEmpty else { return 0 }
         var currentIndex = 0
         forEachNode { _ in
@@ -169,11 +170,55 @@ extension LinkedListable where Self: Collection, Self.Index == Int, Self.Element
         return currentIndex
     }
     
-    func index(after i: Index) -> Index {
+    public func index(after i: Index) -> Index {
         i + 1
     }
-    subscript(position: Index) -> Element {
+    
+    public subscript(position: Index) -> Element {
         node(at: position)!.value
     }
     
+    public var isEmpty: Bool {
+        return firstNode == nil
+    }
 }
+
+// MARK: - MutableCollection
+extension LinkedListable where Self: MutableCollection, Self.Index == Int, Self.Element == Value {
+    public subscript(at index: Self.Index) -> Self.Element {
+        get { node(at: index)!.value }
+        set(newValue) { node(at: index)!.value = newValue }
+    }
+}
+
+final public class LinkedListNode<Value>: Nodeable {
+    public var value: Value
+    public var next: LinkedListNode?
+    public init(value: Value, next: LinkedListNode?) {
+        self.value = value
+        self.next = next
+    }
+}
+
+extension LinkedListNode: Equatable, CustomStringConvertible where Value: Equatable {}
+
+//final public class BaseLinkedList<Value>: LinkedListable where Value: Equatable {
+//    public typealias Node = LinkedListNode<Value>
+//    public var firstNode: LinkedListNode<Value>?
+//    public weak var lastNode: LinkedListNode<Value>?
+//    required public init() { }
+//}
+//
+//extension BaseLinkedList: CustomStringConvertible, ExpressibleByArrayLiteral, Sequence, Collection, MutableCollection {
+//
+//}
+
+public class BaseLinkedList<Value>: LinkedListable where Value: Equatable {
+    public typealias Node = LinkedListNode<Value>
+    public var firstNode: LinkedListNode<Value>?
+    public weak var lastNode: LinkedListNode<Value>?
+    required public init() { }
+}
+
+public class EnhancedLinkedList<Value>: BaseLinkedList<Value> where Value: Equatable {}
+extension EnhancedLinkedList: CustomStringConvertible, ExpressibleByArrayLiteral, Sequence, Collection {}

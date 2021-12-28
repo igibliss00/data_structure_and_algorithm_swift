@@ -69,8 +69,10 @@ public class SinglyLinkedList<T: Equatable> {
 
     public func deleteNode(index: Int) -> Node<T>? {
         if index == 0 {
-            head = nil
-            tail = nil
+            defer {
+                head = nil
+                tail = nil
+            }
 
             return head
         } else {
