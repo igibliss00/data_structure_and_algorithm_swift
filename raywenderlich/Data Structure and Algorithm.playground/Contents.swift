@@ -2,7 +2,7 @@ import Foundation
 import PlaygroundSupport
 import XCTest
 
-final class StackTests: XCTestCase {
+final class StackTestCase: XCTestCase {
     var stack = Stack<Int>()
     
     override func setUp() {
@@ -347,7 +347,7 @@ final class QuicksortTest: XCTestCase {
     }
 }
 
-final class LinkListTest: XCTestCase {
+final class LinkListTestCase: XCTestCase {
     func test_doublyLinkedList() {
         let linkedList = LinkedList<Int>()
         for i in stride(from: 0, to: 100, by: 10) {
@@ -420,14 +420,98 @@ final class LinkListTest: XCTestCase {
         XCTAssertEqual(reduced, expectedReduce)
         XCTAssertEqual(linkedList.count, 3)
         
-        
         let found = linkedList.index(after: linkedList.startIndex)
         print(found)
     }
 }
 
+final class HeapTestCase: XCTestCase {
+    func test_min_heap() {
+        checkHeap(Heap<Int>.self, orderCriteria: "<")
+    }
+    
+    func test_max_heap() {
+        checkHeap(Heap<Int>.self, orderCriteria: ">")
+    }
+    
+    func test_insert_heap() {
+        
+    }
+}
+
+final class HashTableTest: XCTestCase {
+    func test_HashTable() {
+        var hashTable = HashTable<String, String>(capacity: 3)
+        XCTAssertTrue(hashTable.isEmpty)
+        
+        hashTable["Apple"] = "iPhone"
+        hashTable.updateValue("Galaxy", forKey: "Samsung")
+        hashTable["Neo"] = "Tom"
+        hashTable["One"] = "Foolery"
+        
+        XCTAssertEqual(4, hashTable.count)
+        let removed = hashTable.removeValue(forKey: "Neo")
+        XCTAssertEqual(removed, "Tom")
+        XCTAssertEqual(3, hashTable.count)
+    }
+}
+
+final class HashSetTest: XCTestCase {
+    func test_hashSet() {
+        var hashSet = HashSet<String>()
+        XCTAssertTrue(hashSet.isEmpty)
+        
+        hashSet.insert("one")
+        hashSet.insert("two")
+        hashSet.insert("three")
+        hashSet.insert("four")
+        hashSet.insert("five")
+        hashSet.insert("six")
+        hashSet.insert("seven")
+        
+        let elements = hashSet.allElements()
+        XCTAssertEqual(elements.count, 7)
+        XCTAssertEqual(hashSet.count, 7)
+        
+        let isContains = elements.contains("two")
+        XCTAssertTrue(isContains)
+        
+        let isNotContains = elements.contains("eleven")
+        XCTAssertFalse(isNotContains)
+        
+        hashSet.remove("four")
+        XCTAssertEqual(hashSet.count, 6)
+    }
+    
+    func test_hashSetEnhanced() {
+        var hashSet = HashSetEnhanced<String>(capacity: 20)
+        XCTAssertTrue(hashSet.isEmpty)
+        
+        hashSet.insert("one")
+        hashSet.insert("two")
+        hashSet.insert("three")
+        hashSet.insert("four")
+        hashSet.insert("five")
+        hashSet.insert("six")
+        hashSet.insert("seven")
+        
+        let elements = hashSet.allElements()
+        XCTAssertEqual(elements.count, 7)
+        XCTAssertEqual(hashSet.count, 7)
+        
+        let isContains = elements.contains("two")
+        XCTAssertTrue(isContains)
+        
+        let isNotContains = elements.contains("eleven")
+        XCTAssertFalse(isNotContains)
+        
+        hashSet.remove("four")
+        XCTAssertEqual(hashSet.count, 6)
+    }
+}
+
 // Call Tests
-//TestRunner().runTests(testClass: StackTests.self)
+//TestRunner().runTests(testClass: StackTestCase.self)
 //TestRunner().runTests(testClass: FirstBinaryTreeTestCase.self)
 //TestRunner().runTests(testClass: SecondBinaryTreeTestCase.self)
 //TestRunner().runTests(testClass: AdjacencyListGraphTestCase.self)
@@ -435,8 +519,12 @@ final class LinkListTest: XCTestCase {
 //TestRunner().runTests(testClass: LinterTestCase.self)
 //TestRunner().runTests(testClass: QueueTestCase.self)
 //TestRunner().runTests(testClass: QuicksortTest.self)
-TestRunner().runTests(testClass: LinkListTest.self)
+//TestRunner().runTests(testClass: LinkListTestCase.self)
 //TestRunner().runTests(testClass: PersonNetworkTestCase.self)
+//TestRunner().runTests(testClass: HeapTestCase.self)
+//TestRunner().runTests(testClass: HashTableTest.self)
+TestRunner().runTests(testClass: HashSetTest.self)
+
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
