@@ -481,6 +481,22 @@ final class HashSetTest: XCTestCase {
         
         hashSet.remove("four")
         XCTAssertEqual(hashSet.count, 6)
+        
+        var otherSet = HashSet<String>()
+        otherSet.insert("twenty")
+        otherSet.insert("twentyOne")
+        
+        let combined = hashSet.union(otherSet)
+        XCTAssertEqual(combined.count, 8)
+        
+        otherSet.insert("two")
+        
+        let common = hashSet.intersect(otherSet)
+        XCTAssertEqual(common.count, 1)
+        XCTAssertFalse(common.isEmpty)
+        
+        let difference = hashSet.difference(otherSet)
+        XCTAssertEqual(difference.count, 5)
     }
     
     func test_hashSetEnhanced() {
@@ -507,6 +523,45 @@ final class HashSetTest: XCTestCase {
         
         hashSet.remove("four")
         XCTAssertEqual(hashSet.count, 6)
+    }
+    
+    func test_orderedSet() {
+        let set = OrderedSet<Int>()
+        XCTAssertTrue(set.isEmpty)
+        for i in stride(from: 0, to: 5, by: 1) {
+            set.add(i)
+        }
+        set.insert(50, index: 3)
+        
+        XCTAssertEqual(set.all(), [0, 1, 2, 50, 3, 4])
+        
+        set.remove(0)
+        XCTAssertEqual(set.count, 5)
+        XCTAssertEqual(set.all(), [1, 2, 50, 3, 4])
+        XCTAssertEqual(set.object(at: 2), 50)
+    }
+    
+    func test_multiSet() {
+        var set = Multiset<Int>()
+        for i in stride(from: 0, through: 5, by: 1) {
+            set.add(i)
+        }
+        
+        for _ in 0...2 {
+            set.add(3)
+        }
+                
+        let otherSet = Multiset<Int>([1, 3, 4])
+        XCTAssertFalse(set.isSubset(of: otherSet))
+        XCTAssertTrue(otherSet.isSubset(of: set))
+        
+        let set3 = Multiset<Int>([])
+        // An empty set is always the subset of everything
+        XCTAssertTrue(set3.isSubset(of: set))
+        
+        let set4: Multiset<String> = ["hello"]
+        let set5 = Multiset<String>(set4.allItems)
+        XCTAssertTrue(set4 == set5)
     }
 }
 

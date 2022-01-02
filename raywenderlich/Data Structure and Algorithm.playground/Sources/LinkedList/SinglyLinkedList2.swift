@@ -90,6 +90,8 @@ extension LinkedListable {
         return resultNode
     }
     
+    /// This function is to loop through the nodes conditionally.
+    /// Usually used for finding a node because the loop stops when a certain condition is met.
     public func forEachWhile(closure: (Node) -> Bool) {
         var currentNode = self.firstNode
         while currentNode != nil {
@@ -98,6 +100,9 @@ extension LinkedListable {
         }
     }
     
+    /// This function is used for looping through the entire list without any condition.
+    /// Usually used if need to get to the endIndex or for printing out the entire values for description
+    /// Notice how the closure returns Void, unlike Bool in forEachWhile. This means that the closure is not for a condition, but for a task needed for each node while looping with no condition.
     public func forEachNode(closure: (Node) -> Void) {
         forEachWhile { closure($0); return true }
     }
