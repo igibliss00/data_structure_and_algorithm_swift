@@ -565,6 +565,22 @@ final class HashSetTest: XCTestCase {
     }
 }
 
+final class GeneralTreeTest: XCTestCase {
+    func test_Tree() {
+        let one = TreeNode<Int>(value: 1)
+        let two = TreeNode<Int>(value: 2)
+        let three = TreeNode<Int>(value: 3)
+        let four = TreeNode<Int>(value: 4)
+        
+        one.addChild(two)
+        one.addChild(three)
+        two.addChild(four)        
+        XCTAssertEqual("1 {2 {4 }, 3 }", one.description)
+//        let found = one.search(2)
+//        print("found", found)
+    }
+}
+
 // Call Tests
 //TestRunner().runTests(testClass: StackTestCase.self)
 //TestRunner().runTests(testClass: FirstBinaryTreeTestCase.self)
@@ -578,8 +594,8 @@ final class HashSetTest: XCTestCase {
 //TestRunner().runTests(testClass: PersonNetworkTestCase.self)
 //TestRunner().runTests(testClass: HeapTestCase.self)
 //TestRunner().runTests(testClass: HashTableTest.self)
-TestRunner().runTests(testClass: HashSetTest.self)
-
+//TestRunner().runTests(testClass: HashSetTest.self)
+TestRunner().runTests(testClass: GeneralTreeTest.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
