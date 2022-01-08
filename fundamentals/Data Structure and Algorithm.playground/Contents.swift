@@ -369,7 +369,7 @@ final class LinkListTestCase: XCTestCase {
         XCTAssertEqual(testIndex, expectedTestIndex)
         
         let random = linkedList.randomElement()
-        XCTAssertNotNil(random)    
+        XCTAssertNotNil(random)
     }
     
     func test_singlyLinkedList() {
@@ -574,10 +574,37 @@ final class GeneralTreeTest: XCTestCase {
         
         one.addChild(two)
         one.addChild(three)
-        two.addChild(four)        
+        two.addChild(four)
         XCTAssertEqual("1 {2 {4 }, 3 }", one.description)
 //        let found = one.search(2)
 //        print("found", found)
+    }
+}
+
+final class BreadthFirstSearchTest: XCTestCase {
+    func test_search() {
+        let tree = BFSGraph()
+        
+        let nodeA = tree.addNode("a")
+        let nodeB = tree.addNode("b")
+        let nodeC = tree.addNode("c")
+        let nodeD = tree.addNode("d")
+        let nodeE = tree.addNode("e")
+        let nodeF = tree.addNode("f")
+        let nodeG = tree.addNode("g")
+        let nodeH = tree.addNode("h")
+        
+        tree.addEdge(nodeA, neighbor: nodeB)
+        tree.addEdge(nodeA, neighbor: nodeC)
+        tree.addEdge(nodeB, neighbor: nodeD)
+        tree.addEdge(nodeB, neighbor: nodeE)
+        tree.addEdge(nodeC, neighbor: nodeF)
+        tree.addEdge(nodeC, neighbor: nodeG)
+        tree.addEdge(nodeE, neighbor: nodeH)
+        
+        let nodesExplored = breadthFirstSearch(tree)
+        
+        XCTAssertEqual(nodesExplored, ["a", "b", "c", "d", "e", "f", "g", "h"])
     }
 }
 
@@ -595,7 +622,9 @@ final class GeneralTreeTest: XCTestCase {
 //TestRunner().runTests(testClass: HeapTestCase.self)
 //TestRunner().runTests(testClass: HashTableTest.self)
 //TestRunner().runTests(testClass: HashSetTest.self)
-TestRunner().runTests(testClass: GeneralTreeTest.self)
+//TestRunner().runTests(testClass: GeneralTreeTest.self)
+TestRunner().runTests(testClass: BreadthFirstSearchTest.self)
+
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
