@@ -94,3 +94,31 @@ public func breadthFirstSearch(_ graph: BFSGraph) -> [String] {
     return nodesExplored
 }
 
+public func breadthFirstSearch1<T>(_ graph: AdjacencyListGraph<T>) -> [String] {
+    guard let source = graph.adjacencyList.first else {
+        return []
+    }
+    
+    var queue = Queue<EdgeList<T>>()
+    queue.enqueue(source)
+    source.vertex.isVisited = true
+    var nodesExplored: [String] = [source.vertex.description]
+    
+    while let current = queue.dequeue() {
+        guard let edges = current.edges else {
+            continue
+        }
+        
+        for edge in edges {
+            var neighbourNode = edge.to
+            if !neighbourNode.isVisited {
+                let edgeList = graph.adjacencyList[neighbourNode.index]
+                queue.enqueue(edgeList)
+                neighbourNode.isVisited = true
+                nodesExplored.append(neighbourNode.description)
+            }
+        }
+    }
+    
+    return nodesExplored
+}

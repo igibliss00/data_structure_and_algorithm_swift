@@ -4,6 +4,7 @@ import Foundation
 public struct Vertex<T>: Equatable where T: Hashable {
     public var data: T
     public var index: Int
+    public var isVisited: Bool = false
     
     public init(data: T, index: Int) {
         self.data = data
@@ -87,16 +88,22 @@ extension Edge: Hashable {
 }
 
 // MARK: - EdgeList
-private class EdgeList<T> where T: Hashable {
-    var vertex: Vertex<T>
-    var edges: [Edge<T>]?
+public class EdgeList<T> where T: Hashable {
+    public var vertex: Vertex<T>
+    public var edges: [Edge<T>]?
     
-    init(vertex: Vertex<T>) {
+    public init(vertex: Vertex<T>) {
         self.vertex = vertex
     }
     
-    func addEdge(_ edge: Edge<T>) {
+    public func addEdge(_ edge: Edge<T>) {
         edges?.append(edge)
+    }
+}
+
+extension EdgeList: CustomStringConvertible {
+    public var description: String {
+        return "vertex: \(vertex), edges: \(edges.map { $0.description } ?? "nil")"
     }
 }
 
@@ -133,7 +140,7 @@ open class AbstractGraph<T>: CustomStringConvertible where T: Hashable {
         fatalError("abstract function called")
     }
 
-    open func addUndirectedEdge(_ vertices: (Vertex<T>, Vertex<T>), withWeight: Double?) {
+    open func addUndirectedEdge(_ vertices: (Vertex<T>, Vertex<T>), withWeight weight: Double?) {
         fatalError("abstract function called")
     }
 
@@ -253,8 +260,8 @@ open class AdjacencyMatrixGraph<T>: AbstractGraph<T> where T: Hashable {
 
 // MARK: - AdjacencyListGraph
 open class AdjacencyListGraph<T>: AbstractGraph<T> where T: Hashable {
-    fileprivate var adjacencyList: [EdgeList<T>] = []
-    
+    private(set) public var adjacencyList: [EdgeList<T>] = []
+
     public required init() {
         super.init()
     }
@@ -311,10 +318,6 @@ open class AdjacencyListGraph<T>: AbstractGraph<T> where T: Hashable {
         }
     }
     
-    func d() {
-        
-    }
-    
     open override func addUndirectedEdge(_ vertices: (Vertex<T>, Vertex<T>), withWeight weight: Double?) {
         addDirectedEdge(vertices.0, to: vertices.1, withWeight: weight)
         addDirectedEdge(vertices.1, to: vertices.0, withWeight: weight)
@@ -357,3 +360,4 @@ open class AdjacencyListGraph<T>: AbstractGraph<T> where T: Hashable {
         return rows.joined(separator: "\n")
     }
 }
+

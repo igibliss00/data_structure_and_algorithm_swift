@@ -582,29 +582,103 @@ final class GeneralTreeTest: XCTestCase {
 }
 
 final class BreadthFirstSearchTest: XCTestCase {
-    func test_search() {
-        let tree = BFSGraph()
+//    func test_search() {
+//        let tree = BFSGraph()
+//
+//        let nodeA = tree.addNode("a")
+//        let nodeB = tree.addNode("b")
+//        let nodeC = tree.addNode("c")
+//        let nodeD = tree.addNode("d")
+//        let nodeE = tree.addNode("e")
+//        let nodeF = tree.addNode("f")
+//        let nodeG = tree.addNode("g")
+//        let nodeH = tree.addNode("h")
+//
+//        tree.addEdge(nodeA, neighbor: nodeB)
+//        tree.addEdge(nodeA, neighbor: nodeC)
+//        tree.addEdge(nodeB, neighbor: nodeD)
+//        tree.addEdge(nodeB, neighbor: nodeE)
+//        tree.addEdge(nodeC, neighbor: nodeF)
+//        tree.addEdge(nodeC, neighbor: nodeG)
+//        tree.addEdge(nodeE, neighbor: nodeH)
+//
+//        let nodesExplored = breadthFirstSearch(tree)
+//
+//        XCTAssertEqual(nodesExplored, ["a", "b", "c", "d", "e", "f", "g", "h"])
+//    }
+    
+    func test_search_AdjacentList() {
+        let graph = AdjacencyListGraph<String>()
         
-        let nodeA = tree.addNode("a")
-        let nodeB = tree.addNode("b")
-        let nodeC = tree.addNode("c")
-        let nodeD = tree.addNode("d")
-        let nodeE = tree.addNode("e")
-        let nodeF = tree.addNode("f")
-        let nodeG = tree.addNode("g")
-        let nodeH = tree.addNode("h")
+        let a = graph.createVertex("a")
+        let b = graph.createVertex("b")
+        let c = graph.createVertex("c")
         
-        tree.addEdge(nodeA, neighbor: nodeB)
-        tree.addEdge(nodeA, neighbor: nodeC)
-        tree.addEdge(nodeB, neighbor: nodeD)
-        tree.addEdge(nodeB, neighbor: nodeE)
-        tree.addEdge(nodeC, neighbor: nodeF)
-        tree.addEdge(nodeC, neighbor: nodeG)
-        tree.addEdge(nodeE, neighbor: nodeH)
+        graph.addDirectedEdge(a, to: b, withWeight: 1.0)
+        graph.addDirectedEdge(b, to: c, withWeight: 2.0)
+        graph.addDirectedEdge(a, to: c, withWeight: -5.5)
         
-        let nodesExplored = breadthFirstSearch(tree)
+        let nodesExplored = breadthFirstSearch1(graph)
+        XCTAssertEqual(nodesExplored, ["0: a", "1: b", "2: c", "2: c"])
+    }
+}
+
+final class DepthFirstSearch: XCTestCase {
+    func test_edgeList() {
+        let graph = DFSGraph<String>()
         
-        XCTAssertEqual(nodesExplored, ["a", "b", "c", "d", "e", "f", "g", "h"])
+        let a = graph.addNode("a")
+        let b = graph.addNode("b")
+        let c = graph.addNode("c")
+        
+        graph.addDirectedEdge(a, to: b, withWeight: 1.0)
+        graph.addDirectedEdge(b, to: c, withWeight: 2.0)
+        graph.addDirectedEdge(c, to: a, withWeight: -5.5)
+        
+        guard let source = graph.nodes.first else {
+            return
+        }
+        
+        let nodesExplored = depthFirstSearch(source)
+        XCTAssertEqual(nodesExplored, ["a", "b", "c"])
+    }
+}
+
+final class BloomFilterTest: XCTestCase {
+    /* Two hash functions, adapted from
+     http://www.cse.yorku.ca/~oz/hash.html */
+    
+    func djb2(_ x: String) -> Int {
+        var hash = 5381
+        
+        for char in x {
+            hash = ((hash << 5) &+ hash) &+ char.hashValue
+        }
+        
+        return Int(hash)
+    }
+    
+    func sdbm(_ x: String) -> Int {
+        var hash = 0
+        
+        for char in x {
+            hash = char.hashValue &+ (hash << 6) &+ (hash << 16) &- hash
+        }
+        
+        return Int(hash)
+    }
+    
+    func test_bloomFilter() {
+        let hashfunctions = [djb2, sdbm]
+        let bloomFilter = BloomFilter<String>(hashFunctions: hashfunctions)
+        let values = ["hello", "world", "sushi"]
+        bloomFilter.insert(values)
+        let exists = values.map { bloomFilter.contains($0) }
+        XCTAssertTrue(exists.reduce(true, { $0 && $1 }))
+        
+        let values2 = ["car", "airplane", "tank"]
+        let notExistent = values2.map { bloomFilter.contains($0) }
+        XCTAssertFalse(notExistent.reduce(false, { $0 && $1}))
     }
 }
 
@@ -623,8 +697,9 @@ final class BreadthFirstSearchTest: XCTestCase {
 //TestRunner().runTests(testClass: HashTableTest.self)
 //TestRunner().runTests(testClass: HashSetTest.self)
 //TestRunner().runTests(testClass: GeneralTreeTest.self)
-TestRunner().runTests(testClass: BreadthFirstSearchTest.self)
-
+//TestRunner().runTests(testClass: BreadthFirstSearchTest.self)
+//TestRunner().runTests(testClass: DepthFirstSearch.self)
+TestRunner().runTests(testClass: BloomFilterTest.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
