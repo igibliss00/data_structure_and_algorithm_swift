@@ -682,6 +682,117 @@ final class BloomFilterTest: XCTestCase {
     }
 }
 
+final class DijkstraTest: XCTestCase {
+    var vertices: Set<DVertex> = Set()
+    
+    func createNotConnectedVertices() {
+        //change this value to increase or decrease amount of vertices in the graph
+        let numberOfVerticesInGraph = 15
+        for i in 0..<numberOfVerticesInGraph {
+            let vertex = DVertex(identifier: "\(i)")
+            vertices.insert(vertex)
+        }
+    }
+    
+    func setupConnections() {
+        for vertex in vertices {
+            //the amount of edges each vertex can have
+            let randomEdgesCount = arc4random_uniform(4) + 1
+            for _ in 0..<randomEdgesCount {
+                //randomize weight value from 0 to 9
+                let randomWeight = Double(arc4random_uniform(10))
+                let neighborVertex = randomVertex(except: vertex)
+                
+                //we need this check to set only one connection between two equal pairs of vertices
+                if vertex.neighbours.contains(where: { $0.0 == neighborVertex }) {
+                    continue
+                }
+                //creating neighbours and setting them
+                let neighbor1 = (neighborVertex, randomWeight)
+                let neighbor2 = (vertex, randomWeight)
+                vertex.neighbours.append(neighbor1)
+                neighborVertex.neighbours.append(neighbor2)
+            }
+        }
+    }
+    
+    func randomVertex(except vertex: DVertex) -> DVertex {
+        var newSet = vertices
+        newSet.remove(vertex)
+        let offset = Int(arc4random_uniform(UInt32(newSet.count)))
+        let index = newSet.index(newSet.startIndex, offsetBy: offset)
+        return newSet[index]
+    }
+    
+    func randomVertex() -> DVertex {
+        let offset = Int(arc4random_uniform(UInt32(vertices.count)))
+        let index = vertices.index(vertices.startIndex, offsetBy: offset)
+        return vertices[index]
+    }
+    
+    func test() {
+        //initialize random graph
+        createNotConnectedVertices()
+        setupConnections()
+        
+        //initialize Dijkstra algorithm with graph vertices
+        let dijkstra = Dijkstra(vertices: vertices)
+        
+        //decide which vertex will be the starting one
+        let startVertex = randomVertex()
+        
+        let startTime = Date()
+        
+        //ask algorithm to find shortest paths from start vertex to all others
+        dijkstra.findShortestPaths(from: startVertex)
+        
+        let endTime = Date()
+        
+        print("calculation time is = \((endTime.timeIntervalSince(startTime))) sec")
+        
+        //printing results
+        let destinationVertex = randomVertex(except: startVertex)
+        print(destinationVertex.pathLengthFromStart)
+        var pathVerticesFromStartString: [String] = []
+        for vertex in destinationVertex.pathVerticesFromStart {
+            pathVerticesFromStartString.append(vertex.identifier)
+        }
+        
+        print(pathVerticesFromStartString.joined(separator: "->"))
+    }
+}
+
+final class LeetCode: XCTestCase {
+
+    func test2() {
+//        let l1 = [9,9,9,9,9,9,9]
+//        let l2 = [9,9,9,9]
+//        let l1 = [2,4,3]
+//        let l2 = [5,6,4]
+        let l1 = [2,4,9]
+        let l2 = [5,6,4,9]
+        
+        let s = Solution2()
+        let firstList = s.createNodes(l1)
+        let secondList = s.createNodes(l2)
+        
+        guard let result = s.addTwoNumbers(firstList.first, secondList.first) else {
+            return
+        }
+        
+        let _ = s.getValues(result)
+//        print(finalValues)
+        // [8,9,9,9,0,0,0,1]
+    }
+    
+    func test3() {
+        let str = "pwwkew"
+        let s = Solution3()
+        let length = s.lengthOfLongestSubstring(str)
+        print(length)
+    }
+}
+
 // Call Tests
 //TestRunner().runTests(testClass: StackTestCase.self)
 //TestRunner().runTests(testClass: FirstBinaryTreeTestCase.self)
@@ -699,7 +810,9 @@ final class BloomFilterTest: XCTestCase {
 //TestRunner().runTests(testClass: GeneralTreeTest.self)
 //TestRunner().runTests(testClass: BreadthFirstSearchTest.self)
 //TestRunner().runTests(testClass: DepthFirstSearch.self)
-TestRunner().runTests(testClass: BloomFilterTest.self)
+//TestRunner().runTests(testClass: BloomFilterTest.self)
+//TestRunner().runTests(testClass: DijkstraTest.self)
+TestRunner().runTests(testClass: LeetCode.self)
 
 class PlaygroundTestObserver: NSObject, XCTestObservation {
     @objc func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {

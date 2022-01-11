@@ -41,11 +41,31 @@ public class Dijkstra {
     
     public func findShortestPaths(from startVertex: DVertex) {
         clearCache()
-        
-        var currentVertex = startVertex
-        
+        var currentVertices = self.totalVertices
+        startVertex.pathLengthFromStart = 0
+        startVertex.pathVerticesFromStart.append(startVertex)
+        var currentVertex: DVertex? = startVertex
         while let vertex = currentVertex {
-            
+            currentVertices.remove(vertex)
+            let filteredNeighbors = vertex.neighbours.filter { currentVertices.contains($0.0) }
+            for neighbor in filteredNeighbors {
+                let neighborVertex = neighbor.0
+                let weight = neighbor.1
+                
+                let theoreticNewWeight = vertex.pathLengthFromStart + weight
+                print("theoreticNewWeight", theoreticNewWeight)
+                print("neighborVertex.pathLengthFromStart", neighborVertex.pathLengthFromStart)
+                if theoreticNewWeight < neighborVertex.pathLengthFromStart {
+                    neighborVertex.pathLengthFromStart = theoreticNewWeight
+                    neighborVertex.pathVerticesFromStart = vertex.pathVerticesFromStart
+                    neighborVertex.pathVerticesFromStart.append(neighborVertex)
+                }
+            }
+            if currentVertices.isEmpty {
+                currentVertex = nil
+                break
+            }
+            currentVertex = currentVertices.min { $0.pathLengthFromStart < $1.pathLengthFromStart }
         }
     }
 }
